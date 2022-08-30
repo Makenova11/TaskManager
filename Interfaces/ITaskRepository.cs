@@ -9,18 +9,12 @@
     public interface ITaskRepository
     {
         /// <summary>
-        /// тестовый запрос для фронта.
-        /// </summary>
-        /// <returns></returns>
-        public Task<TaskDto> Test();
-
-        /// <summary>
         /// Возвращает список всех задач пользователя.
         /// </summary>
         /// <param name="Id"> Id пользователя. </param>
         /// <param name="cancellationToken"> Структура для совместной отмены операций между потоками. </param>
         /// <returns> TaskDto. </returns>
-        public Task<IEnumerable<TaskModel>> GetAllTaskByUserIdAsync(long Id, CancellationToken cancellationToken);
+        public Task<TasksDto> GetAllTaskByUserIdAsync(long Id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Добавляет задачу.
@@ -38,7 +32,7 @@
         /// <param name="taskDto"> Изменения в задаче. </param>
         /// <param name="cancellationToken"> Структура для совместной отмены операций между потоками. </param>
         /// <returns> Task. </returns>
-        public Task UpdateTaskAsync(long Id, TaskModelDto dto, CancellationToken cancellationToken);
+        public Task UpdateTaskAsync(long Id, TaskDto dto, CancellationToken cancellationToken);
         /// <summary>
         /// Удаляет задачу.
         /// </summary>
@@ -46,5 +40,12 @@
         /// <param name="cancellationToken"> Структура для совместной отмены операций между потоками. </param>
         /// <returns> Task. </returns>
         public Task DeleteTaskAsync(TaskModel dto, CancellationToken cancellationToken);
+        /// <summary>
+        /// Получить информацию о задаче по Id задачи.
+        /// </summary>
+        /// <param name="taskId"> Id задачи. </param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task<TaskModel> GetTaskById(long taskId, CancellationToken cancellationToken);
     }
 }

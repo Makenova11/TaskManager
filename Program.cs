@@ -13,7 +13,8 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 // db
 builder.Services.AddDbContext<TaskManagerContext>(options =>
-    options.UseNpgsql(builder.Configuration["ConnectionStrings:WebApiDatabase"]));
+    options.UseNpgsql(builder.Configuration["ConnectionStrings:WebApiDatabase"], 
+    opt => { opt.EnableRetryOnFailure(); }));
 // openApi swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

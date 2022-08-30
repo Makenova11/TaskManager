@@ -10,12 +10,16 @@
         /// </summary>
         public long UserId { get; set; }
         /// <summary>
-        /// Дата создания задач.
+        /// Задача.
+        /// </summary>
+        public string Text { get; set; } = null!;
+        /// <summary>
+        /// Дата создания.
         /// </summary>
         public string Date { get; set; }
         /// <summary>
-        /// Список задач.
+        /// Выполнена ли задача (перечёркнута).
         /// </summary>
-        public List<TextDto>? TextDtos { get; set; }
+        public bool IsCompleted { get; set; } = false;
     }
 }

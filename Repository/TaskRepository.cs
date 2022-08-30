@@ -1,7 +1,9 @@
 ﻿namespace TaskManager.Repository
 {
     using Microsoft.EntityFrameworkCore;
+    using System.Globalization;
     using TaskManager.Dto;
+    using TaskManager.Extensions;
     using TaskManager.Interfaces;
     using TaskManager.Models;
 
@@ -23,7 +25,7 @@
         {
             var task = new TaskModel {
                 UserId = userId,
-                Date = dto.Date,
+                Date = dto.Date.ConvertToDateTime(),
                 Text = dto.Text,
                 IsCompleted = dto.IsCompleted
             };
@@ -38,32 +40,40 @@
         }
 
         //<inheritdoc/>
-        public async Task<IEnumerable<TaskModel>> GetAllTaskByUserIdAsync(long Id, 
+        public async Task<TasksDto> GetAllTaskByUserIdAsync(long Id, 
             CancellationToken cancellationToken)
         {
-            return await _context.Tasks.Where(x => x.UserId == Id).AsNoTracking().ToListAsync(cancellationToken);
+            var tasks = await _context.Tasks.Where(x => x.UserId == Id).AsNoTracking().ToListAsync(cancellationToken);
+            var textDtoList = new List<TextDto>();
+            foreach(var task in tasks)
+            {
+                textDtoList.Add(new TextDto
+                {
+                    Text = task.Text,
+                    Date = task.Date.ToString("dd.MM.yyyy"),
+                    TaskId = task.Id,
+                    IsCompleted = task.IsCompleted
+                });
+            }
+
+            return new TasksDto { UserId = Id, TextDtos = textDtoList };
         }
 
         //<inheritdoc/>
-        public async Task<TaskDto> Test()
+        public async Task<TaskModel> GetTaskById(long taskId, CancellationToken cancellationToken)
         {
-            return new TaskDto
-            {
-                UserId = 1,
-                Date = new DateTime(2022, 8, 28),
-                TextDtos = new List<TextDto> { new TextDto { TaskId = 1, Text = "Подраться с братом", IsCompleted = false},
-                new TextDto{ TaskId = 2,Text = "Вкусно покушать", IsCompleted = true },
-                new TextDto{ TaskId = 3,Text = "Забрать печенье у брата", IsCompleted = true },
-                new TextDto{ TaskId = 4,Text = "Сказать маме, что брат первый начал", IsCompleted = false}}
-            };
+            return await _context.Tasks.SingleOrDefaultAsync(x => x.Id == taskId,
+                cancellationToken: cancellationToken);
         }
+
         //<inheritdoc/>
-        public async Task UpdateTaskAsync(long Id, TaskModelDto dto, CancellationToken cancellationToken)
+        public async Task UpdateTaskAsync(long Id, TaskDto dto, CancellationToken cancellationToken)
         {
+            var taskModel = _context.Tasks.SingleOrDefaultAsync(x => x.Id == Id);
             var task = new TaskModel
             {
-                UserId = Id,
-                Date = dto.Date,
+                UserId = dto.UserId,
+                Date = dto.Date.ConvertToDateTime(),
                 Text = dto.Text,
                 IsCompleted = dto.IsCompleted
             };

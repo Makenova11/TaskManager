@@ -9,6 +9,11 @@
         /// Id задачи.
         /// </summary>
         public long TaskId {get;set;}
+
+        /// <summary>
+        /// Дата создания задач.
+        /// </summary>
+        public string Date { get; set; }
         /// <summary>
         /// Текст.
         /// </summary>

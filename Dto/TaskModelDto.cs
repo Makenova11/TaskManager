@@ -12,7 +12,7 @@
         /// <summary>
         /// Дата создания.
         /// </summary>
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         /// <summary>
         /// Выполнена ли задача (перечёркнута).
         /// </summary>
